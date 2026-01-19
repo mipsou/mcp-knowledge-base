@@ -1,0 +1,78 @@
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+
+startCommand:
+  type: stdio
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    properties:
+      huggingfaceApiKey:
+        type: string
+        description: Hugging Face API key for inference
+      knowledgeBasesRootDir:
+        type: string
+        default: /root/knowledge_bases
+        description: Root directory for knowledge bases
+      faissIndexPath:
+        type: string
+        default: /root/knowledge_bases/.faiss
+        description: Path to FAISS index file
+      huggingfaceModelName:
+        type: string
+        default: sentence-transformers/all-MiniLM-L6-v2
+        description: Hugging Face model for embeddings
+      embeddingProvider:
+        type: string
+        enum: ["huggingface", "ollama"]
+        default: huggingface
+        description: Embedding provider to use (huggingface or ollama)
+      ollamaBaseUrl:
+        type: string
+        default: http://localhost:11434
+        description: Base URL for the Ollama API
+      ollamaModel:
+        type: string
+        default: dengcao/Qwen3-Embedding-0.6B:Q8_0
+        description: Ollama model to use for embeddings
+    required:
+      - knowledgeBasesRootDir
+      - faissIndexPath
+      - embeddingProvider
+    oneOf:
+      - properties:
+          embeddingProvider:
+            const: huggingface
+        required:
+          - huggingfaceApiKey
+          - huggingfaceModelName
+      - properties:
+          embeddingProvider:
+            const: ollama
+        required:
+          - ollamaBaseUrl
+          - ollamaModel
+    default: {}
+  commandFunction:
+    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
+    |-
+    (config) => ({
+      command: 'node',
+      args: ['build/index.js'],
+      env: {
+        HUGGINGFACE_API_KEY: config.huggingfaceApiKey,
+        KNOWLEDGE_BASES_ROOT_DIR: config.knowledgeBasesRootDir,
+        FAISS_INDEX_PATH: config.faissIndexPath,
+        HUGGINGFACE_MODEL_NAME: config.huggingfaceModelName,
+        EMBEDDING_PROVIDER: config.embeddingProvider,
+        OLLAMA_BASE_URL: config.ollamaBaseUrl,
+        OLLAMA_MODEL: config.ollamaModel
+      }
+    })
+  exampleConfig:
+    huggingfaceApiKey: hf_example_key_123
+    knowledgeBasesRootDir: /data/knowledge_bases
+    faissIndexPath: /data/knowledge_bases/.faiss
+    huggingfaceModelName: sentence-transformers/all-MiniLM-L6-v2
+    embeddingProvider: huggingface
+    ollamaBaseUrl: http://localhost:11434
+    ollamaModel: dengcao/Qwen3-Embedding-0.6B:Q8_0
