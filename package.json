@@ -11,7 +11,7 @@
     "dev": "nodemon src/index.ts"
   },
   "keywords": [],
-  "author": "jean.ibarz",
+  "author": "Mipsou <chpujol@gmail.com>",
   "license": "UNLICENSED",
   "dependencies": {
     "@huggingface/inference": "^2.8.1",
