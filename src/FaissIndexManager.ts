@@ -5,6 +5,7 @@ import * as path from 'path';
 import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
 import { OllamaEmbeddings } from "@langchain/ollama";
 import { OpenAIEmbeddings } from "@langchain/openai";
+import { XenovaEmbeddings } from './XenovaEmbeddings.js';
 import { FaissStore } from "@langchain/community/vectorstores/faiss";
 import { Document } from "@langchain/core/documents";
 import { MarkdownTextSplitter } from "langchain/text_splitter";
@@ -17,6 +18,7 @@ import {
   OLLAMA_BASE_URL,
   OLLAMA_MODEL,
   OPENAI_MODEL_NAME,
+  XENOVA_MODEL,
 } from './config.js';
 import { logger } from './logger.js';
 
@@ -64,7 +66,7 @@ function handleFsOperationError(action: string, targetPath: string, error: unkno
 
 export class FaissIndexManager {
   private faissIndex: FaissStore | null = null;
-  private embeddings: HuggingFaceInferenceEmbeddings | OllamaEmbeddings | OpenAIEmbeddings;
+  private embeddings: HuggingFaceInferenceEmbeddings | OllamaEmbeddings | OpenAIEmbeddings | XenovaEmbeddings;
   private modelName: string;
   private embeddingProvider: string;
 
@@ -90,6 +92,10 @@ export class FaissIndexManager {
         apiKey: openaiApiKey,
         model: this.modelName,
       });
+    } else if (this.embeddingProvider === 'xenova') {
+      logger.info('Initializing FaissIndexManager with Xenova local embeddings (offline)');
+      this.modelName = XENOVA_MODEL;
+      this.embeddings = new XenovaEmbeddings(this.modelName);
     } else {
       logger.info('Initializing FaissIndexManager with HuggingFace embeddings');
       const huggingFaceApiKey = process.env.HUGGINGFACE_API_KEY;
