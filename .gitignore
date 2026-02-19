@@ -1,0 +1,30 @@
+# === RUNTIME / GENERATED (ne pas publier) ===
+
+# Dépendances
+node_modules/
+
+# Build compilé
+build/
+
+# Index FAISS (généré automatiquement)
+knowledge_bases/**/.faiss/
+knowledge_bases/**/*.faiss
+knowledge_bases/**/*.pkl
+knowledge_bases/**/*.index
+
+# Contenu fetchés depuis URLs (données individualisées)
+knowledge_bases/**/*.md
+
+# URLs en attente (état local)
+knowledge_bases/**/pending_urls.json
+pending_urls.json
+
+# Logs
+*.log
+
+# === STRUCTURE VERSIONNÉE ===
+# Les dossiers KB sont versionnés via .gitkeep
+# !knowledge_bases/**/.gitkeep  ← géré par la règle !.gitkeep ci-dessous
+
+# Forcer .gitkeep même si pattern *.md matche
+!**/.gitkeep
