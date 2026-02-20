@@ -20,3 +20,11 @@ export const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'dengcao/Qwen3-Embedding
 
 // OpenAI configuration
 export const OPENAI_MODEL_NAME = process.env.OPENAI_MODEL_NAME || 'text-embedding-ada-002';
+
+// Xenova/local embeddings configuration
+export const DEFAULT_XENOVA_MODEL = 'Xenova/all-MiniLM-L6-v2';
+export const XENOVA_MODEL = process.env.XENOVA_MODEL || DEFAULT_XENOVA_MODEL;
+
+// URL management
+export const PENDING_URLS_FILE = process.env.PENDING_URLS_FILE ||
+  path.join(KNOWLEDGE_BASES_ROOT_DIR, 'pending_urls.json');

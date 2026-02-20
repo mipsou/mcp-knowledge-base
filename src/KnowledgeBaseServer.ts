@@ -5,15 +5,18 @@ import { CallToolRequestSchema, ErrorCode, ListToolsRequestSchema, McpError } fr
 import * as fsp from 'fs/promises';
 import * as path from 'path';
 import { FaissIndexManager } from './FaissIndexManager.js';
+import { UrlManager } from './UrlManager.js';
 import { KNOWLEDGE_BASES_ROOT_DIR } from './config.js';
 import { logger } from './logger.js';
 
 export class KnowledgeBaseServer {
   private server: Server;
   private faissManager: FaissIndexManager;
+  private urlManager: UrlManager;
 
   constructor() {
     this.faissManager = new FaissIndexManager();
+    this.urlManager = new UrlManager((kb) => this.faissManager.updateIndex(kb));
     logger.info('Initializing KnowledgeBaseServer');
 
     this.server = new Server(
@@ -74,6 +77,58 @@ export class KnowledgeBaseServer {
             required: ['query'],
           },
         },
+        {
+          name: 'suggest_url',
+          description: 'Suggest a URL to add to a knowledge base. The URL is stored as pending and requires user approval before being fetched and indexed. Use this proactively when you encounter relevant official documentation.',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              url: { type: 'string', description: 'The URL to suggest.' },
+              knowledge_base: { type: 'string', description: 'The target knowledge base name (e.g. "infra", "podman", "stepca").' },
+              reason: { type: 'string', description: 'Why this URL is relevant to the knowledge base.' },
+            },
+            required: ['url', 'knowledge_base', 'reason'],
+          },
+        },
+        {
+          name: 'list_pending_urls',
+          description: 'List all URLs pending user approval for indexing into the knowledge base.',
+          inputSchema: { type: 'object', properties: {}, required: [] },
+        },
+        {
+          name: 'approve_url',
+          description: 'Approve a pending URL: fetch its content, convert to Markdown, save to the knowledge base, and reindex. Only call this after explicit user confirmation.',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              id: { type: 'string', description: 'The pending URL id returned by suggest_url.' },
+            },
+            required: ['id'],
+          },
+        },
+        {
+          name: 'reject_url',
+          description: 'Reject and remove a pending URL without fetching it.',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              id: { type: 'string', description: 'The pending URL id to reject.' },
+            },
+            required: ['id'],
+          },
+        },
+        {
+          name: 'add_url',
+          description: 'Directly fetch a URL, convert to Markdown, save to a knowledge base, and reindex — without a pending approval step. Only use when the user explicitly provides the URL.',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              url: { type: 'string', description: 'The URL to fetch and index.' },
+              knowledge_base: { type: 'string', description: 'The target knowledge base name.' },
+            },
+            required: ['url', 'knowledge_base'],
+          },
+        },
       ],
     }));
 
@@ -82,6 +137,16 @@ export class KnowledgeBaseServer {
         return this.handleListKnowledgeBases();
       } else if (request.params.name === 'retrieve_knowledge') {
         return this.handleRetrieveKnowledge(request.params.arguments);
+      } else if (request.params.name === 'suggest_url') {
+        return this.handleSuggestUrl(request.params.arguments);
+      } else if (request.params.name === 'list_pending_urls') {
+        return this.handleListPendingUrls();
+      } else if (request.params.name === 'approve_url') {
+        return this.handleApproveUrl(request.params.arguments);
+      } else if (request.params.name === 'reject_url') {
+        return this.handleRejectUrl(request.params.arguments);
+      } else if (request.params.name === 'add_url') {
+        return this.handleAddUrl(request.params.arguments);
       } else {
         throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${request.params.name}`);
       }
@@ -182,6 +247,73 @@ export class KnowledgeBaseServer {
         ],
         isError: true,
       };
+    }
+  }
+
+  private async handleSuggestUrl(args: any) {
+    if (!args || typeof args.url !== 'string' || typeof args.knowledge_base !== 'string' || typeof args.reason !== 'string') {
+      throw new McpError(ErrorCode.InvalidParams, 'suggest_url requires url, knowledge_base, and reason strings');
+    }
+    try {
+      const entry = await this.urlManager.suggestUrl(args.url, args.knowledge_base, args.reason);
+      return { content: [{ type: 'text', text: `URL suggestion enregistrée (en attente de validation) :\n\`\`\`json\n${JSON.stringify(entry, null, 2)}\n\`\`\`` }] };
+    } catch (error: any) {
+      logger.error('Error suggesting URL:', error);
+      return { content: [{ type: 'text', text: `Error suggesting URL: ${error.message}` }], isError: true };
+    }
+  }
+
+  private async handleListPendingUrls() {
+    try {
+      const urls = await this.urlManager.listPendingUrls();
+      const text = urls.length === 0
+        ? '_Aucune URL en attente._'
+        : `## URLs en attente de validation (${urls.length})\n\n` + urls.map((u, i) =>
+            `**${i + 1}.** \`${u.id}\`\n- URL: ${u.url}\n- KB: ${u.knowledge_base}\n- Raison: ${u.reason}\n- Proposée: ${u.suggested_at}`
+          ).join('\n\n');
+      return { content: [{ type: 'text', text }] };
+    } catch (error: any) {
+      logger.error('Error listing pending URLs:', error);
+      return { content: [{ type: 'text', text: `Error listing pending URLs: ${error.message}` }], isError: true };
+    }
+  }
+
+  private async handleApproveUrl(args: any) {
+    if (!args || typeof args.id !== 'string') {
+      throw new McpError(ErrorCode.InvalidParams, 'approve_url requires an id string');
+    }
+    try {
+      const result = await this.urlManager.approveUrl(args.id);
+      return { content: [{ type: 'text', text: `✅ URL approuvée et indexée :\n- Fichier: ${result.filePath}\n- KB: ${result.knowledgeBase}` }] };
+    } catch (error: any) {
+      logger.error('Error approving URL:', error);
+      return { content: [{ type: 'text', text: `Error approving URL: ${error.message}` }], isError: true };
+    }
+  }
+
+  private async handleRejectUrl(args: any) {
+    if (!args || typeof args.id !== 'string') {
+      throw new McpError(ErrorCode.InvalidParams, 'reject_url requires an id string');
+    }
+    try {
+      await this.urlManager.rejectUrl(args.id);
+      return { content: [{ type: 'text', text: `❌ URL rejetée et supprimée : ${args.id}` }] };
+    } catch (error: any) {
+      logger.error('Error rejecting URL:', error);
+      return { content: [{ type: 'text', text: `Error rejecting URL: ${error.message}` }], isError: true };
+    }
+  }
+
+  private async handleAddUrl(args: any) {
+    if (!args || typeof args.url !== 'string' || typeof args.knowledge_base !== 'string') {
+      throw new McpError(ErrorCode.InvalidParams, 'add_url requires url and knowledge_base strings');
+    }
+    try {
+      const result = await this.urlManager.addUrl(args.url, args.knowledge_base);
+      return { content: [{ type: 'text', text: `✅ URL ajoutée et indexée :\n- Fichier: ${result.filePath}` }] };
+    } catch (error: any) {
+      logger.error('Error adding URL:', error);
+      return { content: [{ type: 'text', text: `Error adding URL: ${error.message}` }], isError: true };
     }
   }
 
