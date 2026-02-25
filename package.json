@@ -15,7 +15,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@huggingface/inference": "^4.13.12",
-    "@langchain/community": "^0.3.29",
+    "@langchain/community": "^1.1.18",
     "@langchain/core": "^0.3.39",
     "@langchain/ollama": "^0.2.3",
     "@modelcontextprotocol/sdk": "^1.0.4",
