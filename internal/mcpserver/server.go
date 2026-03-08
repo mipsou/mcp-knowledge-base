@@ -9,8 +9,6 @@
 package mcpserver
 
 import (
-	"context"
-
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 
@@ -55,14 +53,14 @@ func (s *Server) registerTools() {
 			mcp.WithDescription("Create a new knowledge corpus"),
 			mcp.WithString("name", mcp.Required(), mcp.Description("Corpus name")),
 		),
-		s.stubHandler,
+		s.handleCreateCorpus,
 	)
 
 	s.mcp.AddTool(
 		mcp.NewTool("list_corpora",
 			mcp.WithDescription("List all available corpora"),
 		),
-		s.stubHandler,
+		s.handleListCorpora,
 	)
 
 	s.mcp.AddTool(
@@ -72,7 +70,7 @@ func (s *Server) registerTools() {
 			mcp.WithString("name", mcp.Required(), mcp.Description("Document filename")),
 			mcp.WithString("content", mcp.Required(), mcp.Description("Document content")),
 		),
-		s.stubHandler,
+		s.handleAddDocument,
 	)
 
 	s.mcp.AddTool(
@@ -80,7 +78,7 @@ func (s *Server) registerTools() {
 			mcp.WithDescription("List documents in a corpus"),
 			mcp.WithString("corpus", mcp.Required(), mcp.Description("Corpus name")),
 		),
-		s.stubHandler,
+		s.handleListDocuments,
 	)
 
 	s.mcp.AddTool(
@@ -89,7 +87,7 @@ func (s *Server) registerTools() {
 			mcp.WithString("corpus", mcp.Required(), mcp.Description("Corpus name")),
 			mcp.WithString("name", mcp.Required(), mcp.Description("Document filename")),
 		),
-		s.stubHandler,
+		s.handleReadDocument,
 	)
 
 	s.mcp.AddTool(
@@ -98,11 +96,6 @@ func (s *Server) registerTools() {
 			mcp.WithString("query", mcp.Required(), mcp.Description("Search query")),
 			mcp.WithNumber("max_results", mcp.Description("Maximum results to return")),
 		),
-		s.stubHandler,
+		s.handleSearch,
 	)
-}
-
-// stubHandler is a placeholder handler that returns "not implemented".
-func (s *Server) stubHandler(_ context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	return mcp.NewToolResultText("not implemented"), nil
 }
