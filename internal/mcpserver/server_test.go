@@ -12,10 +12,21 @@ import (
 	"context"
 	"encoding/json"
 	"testing"
+
+	"github.com/mipsou/lore-mcp/internal/corpus"
+	"github.com/mipsou/lore-mcp/internal/search"
 )
 
+func newTestServer(t *testing.T) *Server {
+	t.Helper()
+	root := t.TempDir()
+	store := corpus.NewFileStore(root)
+	searcher := search.NewBM25()
+	return New(store, searcher)
+}
+
 func TestNewServerNotNil(t *testing.T) {
-	s := New()
+	s := newTestServer(t)
 	if s == nil {
 		t.Fatal("expected non-nil server")
 	}
@@ -25,7 +36,7 @@ func TestNewServerNotNil(t *testing.T) {
 }
 
 func TestServerRegistersTools(t *testing.T) {
-	s := New()
+	s := newTestServer(t)
 
 	// Build a JSON-RPC request for tools/list.
 	reqJSON := json.RawMessage(`{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}`)
