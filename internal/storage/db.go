@@ -66,12 +66,5 @@ func (d *DB) migrate() error {
 			updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 		)
 	`)
-	if err != nil {
-		return err
-	}
-
-	// Migrate old "corpus" column to "collection" if needed.
-	d.db.Exec(`ALTER TABLE pending_urls RENAME COLUMN corpus TO collection`)
-
-	return nil
+	return err
 }

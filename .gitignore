@@ -24,3 +24,7 @@ coverage.html
 
 # Logs
 *.log
+
+# Claude Code (local config, worktrees, cache)
+.claude/
+.mcp.json
