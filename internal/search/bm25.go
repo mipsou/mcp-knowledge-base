@@ -21,7 +21,7 @@ const (
 	bm25B  = 0.75
 )
 
-// docKey uniquely identifies a document across corpora.
+// docKey uniquely identifies a document across corpus entries.
 type docKey struct {
 	corpus  string
 	docName string

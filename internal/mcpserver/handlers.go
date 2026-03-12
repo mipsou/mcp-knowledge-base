@@ -30,17 +30,17 @@ func (s *Server) handleCreateCorpus(_ context.Context, req mcp.CallToolRequest) 
 	return mcp.NewToolResultText(fmt.Sprintf("corpus %q created", name)), nil
 }
 
-func (s *Server) handleListCorpora(_ context.Context, _ mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	corpora, err := s.store.List()
+func (s *Server) handleListCorpus(_ context.Context, _ mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+	names, err := s.store.List()
 	if err != nil {
-		return mcp.NewToolResultError(fmt.Sprintf("error listing corpora: %v", err)), nil
+		return mcp.NewToolResultError(fmt.Sprintf("error listing corpus entries: %v", err)), nil
 	}
 
-	if len(corpora) == 0 {
-		return mcp.NewToolResultText("no corpora found"), nil
+	if len(names) == 0 {
+		return mcp.NewToolResultText("no corpus entries found"), nil
 	}
 
-	return mcp.NewToolResultText(strings.Join(corpora, "\n")), nil
+	return mcp.NewToolResultText(strings.Join(names, "\n")), nil
 }
 
 func (s *Server) handleAddDocument(_ context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
@@ -139,7 +139,7 @@ func (s *Server) handleSuggestURL(_ context.Context, req mcp.CallToolRequest) (*
 		return mcp.NewToolResultError("missing required parameter: url"), nil
 	}
 
-	entry, err := s.pending.Add(corpusName, rawURL)
+	entry, err := s.db.PendingAdd(corpusName, rawURL)
 	if err != nil {
 		return mcp.NewToolResultError(fmt.Sprintf("error adding to pending: %v", err)), nil
 	}
@@ -158,7 +158,7 @@ func (s *Server) handleApproveURL(_ context.Context, req mcp.CallToolRequest) (*
 		return mcp.NewToolResultError("missing required parameter: id"), nil
 	}
 
-	entry, err := s.pending.Approve(id)
+	entry, err := s.db.PendingApprove(id)
 	if err != nil {
 		return mcp.NewToolResultError(fmt.Sprintf("error approving: %v", err)), nil
 	}
@@ -184,7 +184,10 @@ func (s *Server) handleApproveURL(_ context.Context, req mcp.CallToolRequest) (*
 }
 
 func (s *Server) handleListPending(_ context.Context, _ mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	entries := s.pending.List()
+	entries, err := s.db.PendingList()
+	if err != nil {
+		return mcp.NewToolResultError(fmt.Sprintf("error listing pending: %v", err)), nil
+	}
 	if len(entries) == 0 {
 		return mcp.NewToolResultText("no pending entries"), nil
 	}

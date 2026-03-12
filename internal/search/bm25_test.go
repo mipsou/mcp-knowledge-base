@@ -89,7 +89,7 @@ func TestBM25Remove(t *testing.T) {
 	}
 }
 
-func TestBM25SearchAcrossCorpora(t *testing.T) {
+func TestBM25SearchAcrossCorpus(t *testing.T) {
 	b := NewBM25()
 	_ = b.Index("infra", "caddy.md", "Caddy web server HTTPS")
 	_ = b.Index("podman", "basics.md", "Podman container basics")

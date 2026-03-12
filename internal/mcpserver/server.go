@@ -14,8 +14,8 @@ import (
 
 	"github.com/mipsou/mcp-biblium/internal/corpus"
 	"github.com/mipsou/mcp-biblium/internal/ingest"
-	"github.com/mipsou/mcp-biblium/internal/pending"
 	"github.com/mipsou/mcp-biblium/internal/search"
+	"github.com/mipsou/mcp-biblium/internal/storage"
 )
 
 // Server wraps the MCP server with Biblium-specific configuration.
@@ -23,12 +23,12 @@ type Server struct {
 	mcp     *server.MCPServer
 	store   *corpus.FileStore
 	search  search.Searcher
-	pending *pending.Queue
+	db      *storage.DB
 	fetcher *ingest.Fetcher
 }
 
 // New creates a new Biblium MCP server with all tools registered.
-func New(store *corpus.FileStore, searcher search.Searcher) *Server {
+func New(store *corpus.FileStore, searcher search.Searcher, db *storage.DB) *Server {
 	s := server.NewMCPServer(
 		"biblium",
 		"0.1.0",
@@ -39,7 +39,7 @@ func New(store *corpus.FileStore, searcher search.Searcher) *Server {
 		mcp:     s,
 		store:   store,
 		search:  searcher,
-		pending: pending.NewQueue(),
+		db:      db,
 		fetcher: ingest.NewFetcher(),
 	}
 	srv.registerTools()
@@ -63,10 +63,10 @@ func (s *Server) registerTools() {
 	)
 
 	s.mcp.AddTool(
-		mcp.NewTool("list_corpora",
-			mcp.WithDescription("List all available corpora"),
+		mcp.NewTool("list_corpus",
+			mcp.WithDescription("List all available corpus entries"),
 		),
-		s.handleListCorpora,
+		s.handleListCorpus,
 	)
 
 	s.mcp.AddTool(
@@ -98,7 +98,7 @@ func (s *Server) registerTools() {
 
 	s.mcp.AddTool(
 		mcp.NewTool("search",
-			mcp.WithDescription("Search across corpora"),
+			mcp.WithDescription("Search across all corpus entries"),
 			mcp.WithString("query", mcp.Required(), mcp.Description("Search query")),
 			mcp.WithNumber("max_results", mcp.Description("Maximum results to return")),
 		),

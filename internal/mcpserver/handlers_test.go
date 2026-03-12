@@ -11,12 +11,24 @@ package mcpserver
 import (
 	"context"
 	"encoding/json"
+	"path/filepath"
 	"strings"
 	"testing"
 
 	"github.com/mipsou/mcp-biblium/internal/corpus"
 	"github.com/mipsou/mcp-biblium/internal/search"
+	"github.com/mipsou/mcp-biblium/internal/storage"
 )
+
+func openDB(t *testing.T, root string) *storage.DB {
+	t.Helper()
+	db, err := storage.Open(filepath.Join(root, "biblium.db"))
+	if err != nil {
+		t.Fatalf("storage.Open: %v", err)
+	}
+	t.Cleanup(func() { db.Close() })
+	return db
+}
 
 // callTool sends a tools/call JSON-RPC request and returns the text content.
 func callTool(t *testing.T, s *Server, toolName string, args map[string]any) string {
@@ -74,7 +86,7 @@ func callTool(t *testing.T, s *Server, toolName string, args map[string]any) str
 func TestHandlerCreateCorpus(t *testing.T) {
 	root := t.TempDir()
 	store := corpus.NewFileStore(root)
-	s := New(store, search.NewBM25())
+	s := New(store, search.NewBM25(), openDB(t, root))
 
 	text := callTool(t, s, "create_corpus", map[string]any{"name": "infra"})
 	if !strings.Contains(text, "infra") {
@@ -85,12 +97,12 @@ func TestHandlerCreateCorpus(t *testing.T) {
 	}
 
 	// Verify corpus actually exists on disk.
-	corpora, err := store.List()
+	entries, err := store.List()
 	if err != nil {
 		t.Fatalf("store.List error: %v", err)
 	}
 	found := false
-	for _, c := range corpora {
+	for _, c := range entries {
 		if c == "infra" {
 			found = true
 		}
@@ -100,16 +112,16 @@ func TestHandlerCreateCorpus(t *testing.T) {
 	}
 }
 
-func TestHandlerListCorpora(t *testing.T) {
+func TestHandlerListCorpus(t *testing.T) {
 	root := t.TempDir()
 	store := corpus.NewFileStore(root)
 	_ = store.Create("alpha")
 	_ = store.Create("beta")
-	s := New(store, search.NewBM25())
+	s := New(store, search.NewBM25(), openDB(t, root))
 
-	text := callTool(t, s, "list_corpora", nil)
+	text := callTool(t, s, "list_corpus", nil)
 	if !strings.Contains(text, "alpha") || !strings.Contains(text, "beta") {
-		t.Errorf("expected both corpora in response, got %q", text)
+		t.Errorf("expected both entries in response, got %q", text)
 	}
 	if strings.HasPrefix(text, "not implemented") {
 		t.Error("handler still returns stub response")
@@ -120,7 +132,7 @@ func TestHandlerAddDocument(t *testing.T) {
 	root := t.TempDir()
 	store := corpus.NewFileStore(root)
 	_ = store.Create("infra")
-	s := New(store, search.NewBM25())
+	s := New(store, search.NewBM25(), openDB(t, root))
 
 	text := callTool(t, s, "add_document", map[string]any{
 		"corpus":  "infra",
@@ -147,7 +159,7 @@ func TestHandlerListDocuments(t *testing.T) {
 	_ = store.Create("infra")
 	_ = store.AddDoc("infra", "caddy.md", []byte("Caddy"))
 	_ = store.AddDoc("infra", "nginx.md", []byte("Nginx"))
-	s := New(store, search.NewBM25())
+	s := New(store, search.NewBM25(), openDB(t, root))
 
 	text := callTool(t, s, "list_documents", map[string]any{"corpus": "infra"})
 	if !strings.Contains(text, "caddy.md") || !strings.Contains(text, "nginx.md") {
@@ -163,7 +175,7 @@ func TestHandlerReadDocument(t *testing.T) {
 	store := corpus.NewFileStore(root)
 	_ = store.Create("infra")
 	_ = store.AddDoc("infra", "caddy.md", []byte("Caddy is great"))
-	s := New(store, search.NewBM25())
+	s := New(store, search.NewBM25(), openDB(t, root))
 
 	text := callTool(t, s, "read_document", map[string]any{
 		"corpus": "infra",
@@ -183,7 +195,7 @@ func TestHandlerSearch(t *testing.T) {
 	_ = store.Create("infra")
 	bm25 := search.NewBM25()
 	_ = bm25.Index("infra", "caddy.md", "Caddy is a web server with HTTPS")
-	s := New(store, bm25)
+	s := New(store, bm25, openDB(t, root))
 
 	text := callTool(t, s, "search", map[string]any{
 		"query":       "caddy HTTPS",
@@ -200,7 +212,7 @@ func TestHandlerSearch(t *testing.T) {
 func TestHandlerCreateCorpusTraversal(t *testing.T) {
 	root := t.TempDir()
 	store := corpus.NewFileStore(root)
-	s := New(store, search.NewBM25())
+	s := New(store, search.NewBM25(), openDB(t, root))
 
 	text := callTool(t, s, "create_corpus", map[string]any{"name": "../escape"})
 	if !strings.Contains(text, "ERROR:") && !strings.Contains(strings.ToLower(text), "error") {

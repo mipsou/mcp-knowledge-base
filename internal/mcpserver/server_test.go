@@ -13,8 +13,11 @@ import (
 	"encoding/json"
 	"testing"
 
+	"path/filepath"
+
 	"github.com/mipsou/mcp-biblium/internal/corpus"
 	"github.com/mipsou/mcp-biblium/internal/search"
+	"github.com/mipsou/mcp-biblium/internal/storage"
 )
 
 func newTestServer(t *testing.T) *Server {
@@ -22,7 +25,12 @@ func newTestServer(t *testing.T) *Server {
 	root := t.TempDir()
 	store := corpus.NewFileStore(root)
 	searcher := search.NewBM25()
-	return New(store, searcher)
+	db, err := storage.Open(filepath.Join(root, "biblium.db"))
+	if err != nil {
+		t.Fatalf("storage.Open: %v", err)
+	}
+	t.Cleanup(func() { db.Close() })
+	return New(store, searcher, db)
 }
 
 func TestNewServerNotNil(t *testing.T) {
@@ -64,7 +72,7 @@ func TestServerRegistersTools(t *testing.T) {
 	// Expect all 9 tools to be registered.
 	expectedTools := []string{
 		"create_corpus",
-		"list_corpora",
+		"list_corpus",
 		"add_document",
 		"list_documents",
 		"read_document",
