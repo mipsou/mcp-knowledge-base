@@ -1,6 +1,6 @@
 # Biblium
 
-[English](#english) | [Fran\çais](#fran\çais)
+🇬🇧 [English](#english) | 🇫🇷 [Français](#français)
 
 ---
 
@@ -12,11 +12,11 @@ Pure Go, zero CGO, single binary. Uses SQLite (via modernc.org/sqlite) and BM25 
 
 ### Features
 
-- **Collections** \— organize documents into named groups
-- **BM25 search** \— full-text search across all collections
-- **URL ingestion** \— suggest URLs, approve them, auto-fetch as markdown
-- **SQLite persistence** \— pending URLs stored in WAL-mode SQLite
-- **MCP protocol** \— stdio transport, works with Claude Desktop / Claude Code
+- **Collections** — organize documents into named groups
+- **BM25 search** — full-text search across all collections
+- **URL ingestion** — suggest URLs, approve them, auto-fetch as markdown
+- **SQLite persistence** — pending URLs stored in WAL-mode SQLite
+- **MCP protocol** — stdio transport, works with Claude Desktop / Claude Code
 
 ### MCP Tools
 
@@ -73,35 +73,35 @@ Add to `claude_desktop_config.json`:
 
 ### License
 
-EUPL-1.2-or-later \— [Full text](https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12)
+EUPL-1.2-or-later — [Full text](https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12)
 
 ---
 
-## Fran\çais
+## Français
 
-Serveur MCP pour g\érer des collections de connaissances avec recherche plein texte.
+Serveur MCP pour gérer des collections de connaissances avec recherche plein texte.
 
-Go pur, z\éro CGO, binaire unique. Utilise SQLite (via modernc.org/sqlite) et classement BM25.
+Go pur, zéro CGO, binaire unique. Utilise SQLite (via modernc.org/sqlite) et classement BM25.
 
-### Fonctionnalit\és
+### Fonctionnalités
 
-- **Collections** \— organiser les documents en groupes nomm\és
-- **Recherche BM25** \— recherche plein texte sur toutes les collections
-- **Ingestion d'URL** \— proposer des URLs, les approuver, r\écup\ération auto en markdown
-- **Persistance SQLite** \— URLs en attente stock\ées en SQLite mode WAL
-- **Protocole MCP** \— transport stdio, compatible Claude Desktop / Claude Code
+- **Collections** — organiser les documents en groupes nommés
+- **Recherche BM25** — recherche plein texte sur toutes les collections
+- **Ingestion d'URL** — proposer des URLs, les approuver, récupération auto en markdown
+- **Persistance SQLite** — URLs en attente stockées en SQLite mode WAL
+- **Protocole MCP** — transport stdio, compatible Claude Desktop / Claude Code
 
 ### Outils MCP
 
 | Outil | Description |
 |-------|-------------|
-| `create_collection` | Cr\éer une nouvelle collection |
+| `create_collection` | Créer une nouvelle collection |
 | `list_collections` | Lister toutes les collections |
-| `add_document` | Ajouter un document \à une collection |
+| `add_document` | Ajouter un document à une collection |
 | `list_documents` | Lister les documents d'une collection |
 | `read_document` | Lire un document |
 | `search` | Rechercher dans toutes les collections |
-| `suggest_url` | Proposer une URL \à ing\érer (approbation requise) |
+| `suggest_url` | Proposer une URL à ingérer (approbation requise) |
 | `approve_url` | Approuver une URL en attente |
 | `list_pending` | Lister les URLs en attente |
 
@@ -121,9 +121,9 @@ GOOS=linux GOARCH=amd64 go build -o biblium ./cmd/biblium
 
 Variables d'environnement :
 
-| Variable | D\éfaut | Description |
+| Variable | Défaut | Description |
 |----------|--------|-------------|
-| `BIBLIUM_DATA_DIR` | `~/biblium_data` | R\épertoire de stockage |
+| `BIBLIUM_DATA_DIR` | `~/biblium_data` | Répertoire de stockage |
 | `BIBLIUM_SEARCH_BACKEND` | `bm25` | Moteur de recherche (`bm25` ou `ollama`) |
 | `BIBLIUM_LOG_LEVEL` | `info` | Niveau de log |
 
@@ -146,4 +146,4 @@ Ajouter dans `claude_desktop_config.json` :
 
 ### Licence
 
-EUPL-1.2-ou-ult\érieure \— [Texte int\égral](https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12)
+EUPL-1.2-ou-ultérieure — [Texte intégral](https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12)
