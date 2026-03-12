@@ -12,13 +12,13 @@ import (
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 
-	"github.com/mipsou/lore-mcp/internal/corpus"
-	"github.com/mipsou/lore-mcp/internal/ingest"
-	"github.com/mipsou/lore-mcp/internal/pending"
-	"github.com/mipsou/lore-mcp/internal/search"
+	"github.com/mipsou/mcp-biblium/internal/corpus"
+	"github.com/mipsou/mcp-biblium/internal/ingest"
+	"github.com/mipsou/mcp-biblium/internal/pending"
+	"github.com/mipsou/mcp-biblium/internal/search"
 )
 
-// Server wraps the MCP server with Lore-specific configuration.
+// Server wraps the MCP server with Biblium-specific configuration.
 type Server struct {
 	mcp     *server.MCPServer
 	store   *corpus.FileStore
@@ -27,10 +27,10 @@ type Server struct {
 	fetcher *ingest.Fetcher
 }
 
-// New creates a new Lore MCP server with all tools registered.
+// New creates a new Biblium MCP server with all tools registered.
 func New(store *corpus.FileStore, searcher search.Searcher) *Server {
 	s := server.NewMCPServer(
-		"lore",
+		"biblium",
 		"0.1.0",
 		server.WithToolCapabilities(false),
 	)

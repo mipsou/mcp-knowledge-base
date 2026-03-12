@@ -14,8 +14,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mipsou/lore-mcp/internal/corpus"
-	"github.com/mipsou/lore-mcp/internal/search"
+	"github.com/mipsou/mcp-biblium/internal/corpus"
+	"github.com/mipsou/mcp-biblium/internal/search"
 )
 
 // callTool sends a tools/call JSON-RPC request and returns the text content.

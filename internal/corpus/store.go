@@ -12,7 +12,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/mipsou/lore-mcp/internal/safepath"
+	"github.com/mipsou/mcp-biblium/internal/safepath"
 )
 
 // FileStore manages corpora on the filesystem.

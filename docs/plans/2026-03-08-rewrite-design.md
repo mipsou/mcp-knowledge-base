@@ -184,15 +184,15 @@ legacy project, suitable for open-source infrastructure, GitHub-compatible slug.
 | 7 | **Folio** | `folio-mcp` | Document folio server for MCP | Publishing/document metaphor; clear purpose |
 | 8 | **Corpus** | `corpus-mcp` | Document corpus server for AI | Precise term for document collections |
 | 9 | **Glean** | `glean-mcp` | Gather and retrieve knowledge | Verb meaning to collect/harvest; but Glean.com exists |
-| 10 | **Lore** | `lore-mcp` | Knowledge lore server for MCP | Short, evocative; means accumulated knowledge/tradition |
+| 10 | **Biblium** | `mcp-biblium` | Knowledge biblium server for MCP | Short, evocative; means accumulated knowledge/tradition |
 
-### Recommended: **Lore** (`lore-mcp`)
+### Recommended: **Biblium** (`mcp-biblium`)
 
 Reasoning:
-- 4 letters, extremely memorable
-- "Lore" means accumulated knowledge, tradition, learning — perfect semantic fit
+- 7 letters, memorable and distinctive
+- "Biblium" evokes the concept of a book/library of knowledge — perfect semantic fit
 - No major trademark conflicts in the infrastructure space
-- Clean GitHub slug: `lore-mcp`
+- Clean GitHub slug: `mcp-biblium`
 - Distinct from any existing MCP server names
 - Works in both English and French contexts
 
@@ -246,7 +246,7 @@ Target: **under 10 direct dependencies**.
 
 ```
 ┌─────────────────────────────────────────────┐
-│                 lore-mcp                     │
+│                 mcp-biblium                     │
 │                                              │
 │  ┌──────────┐   ┌──────────┐   ┌─────────┐ │
 │  │  MCP      │──▶│  Router   │──▶│ Tools   │ │
@@ -380,14 +380,14 @@ Incompatible:
 ## 11. Repository Structure
 
 ```
-lore-mcp/
+mcp-biblium/
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml          # build + test + lint + security
 │   │   └── release.yml     # goreleaser
 │   └── CODEOWNERS
 ├── cmd/
-│   └── lore/
+│   └── biblium/
 │       └── main.go         # entry point (~20 lines)
 ├── internal/
 │   ├── config/
@@ -432,7 +432,7 @@ lore-mcp/
 ### 12.1 Corpus Directory Layout
 
 ```
-$LORE_DATA_DIR/
+$BIBLIUM_DATA_DIR/
 ├── corpora/
 │   ├── infra/
 │   │   ├── meta.toml           # corpus metadata
@@ -449,7 +449,7 @@ $LORE_DATA_DIR/
 │       ├── docs/
 │       └── index.json
 ├── pending.json                # URL approval queue
-└── lore.toml                   # global config (optional)
+└── biblium.toml                # global config (optional)
 ```
 
 ### 12.2 meta.toml
@@ -480,7 +480,7 @@ created_at = "2026-03-08T10:00:00Z"
 
 ### 12.4 Migration Tool
 
-A `lore migrate` subcommand will convert legacy knowledge_bases/ format:
+A `biblium migrate` subcommand will convert legacy knowledge_bases/ format:
 - Scan directories for .md files
 - Create `meta.toml` per directory
 - Move files into `docs/` subdirectory
@@ -582,12 +582,12 @@ implementation. Only the functional scope document (Section 5) is used.
 
 ### Phase 2: Data Migration
 
-The `lore migrate` tool converts existing knowledge_bases/ directories.
-Users run: `lore migrate --from /path/to/knowledge_bases --to /path/to/lore-data`
+The `biblium migrate` tool converts existing knowledge_bases/ directories.
+Users run: `biblium migrate --from /path/to/knowledge_bases --to /path/to/biblium-data`
 
 ### Phase 3: MCP Config Update
 
-Users update their MCP client config to point to the new `lore` binary instead
+Users update their MCP client config to point to the new `biblium` binary instead
 of `node build/index.js`.
 
 ### Phase 4: Archive Legacy
@@ -620,7 +620,7 @@ The `dev` branch is archived. The `main` branch is updated from `dev-rewrite`.
 ### Convention
 
 Each nano-task follows:
-- **ID**: `LOR-XXXX`
+- **ID**: `BIB-XXXX`
 - **Title**: imperative verb phrase
 - **Purpose**: why this task exists
 - **Inputs/Outputs**: what goes in, what comes out
@@ -635,7 +635,7 @@ Each nano-task follows:
 
 ## 18. First 20 Priority Nano-Tasks
 
-### LOR-0001: Create dev-rewrite branch from main
+### BIB-0001: Create dev-rewrite branch from main
 
 - **Purpose**: Establish clean branch for the rewrite
 - **Inputs**: main branch
@@ -647,229 +647,229 @@ Each nano-task follows:
 - **Compliance**: no legacy code carried over
 - **DoD**: Branch exists, pushed to origin
 
-### LOR-0002: Initialize Go module
+### BIB-0002: Initialize Go module
 
 - **Purpose**: Set up Go project structure
-- **Inputs**: Project name decision (lore-mcp)
+- **Inputs**: Project name decision (mcp-biblium)
 - **Outputs**: `go.mod` with module path
 - **Files**: `go.mod`
-- **Dependencies**: LOR-0001
+- **Dependencies**: BIB-0001
 - **Validation**: `go mod tidy` succeeds
 - **Security**: No dependencies yet
 - **Compliance**: Module path matches project identity
 - **DoD**: `go.mod` exists, `go build ./...` succeeds (empty)
 
-### LOR-0003: Add EUPL-1.2 LICENSE file
+### BIB-0003: Add EUPL-1.2 LICENSE file
 
 - **Purpose**: Establish project license
 - **Inputs**: EUPL-1.2 full text
 - **Outputs**: `LICENSE` file
 - **Files**: `LICENSE`
-- **Dependencies**: LOR-0001
+- **Dependencies**: BIB-0001
 - **Validation**: File contains complete EUPL-1.2 text
 - **Security**: N/A
 - **Compliance**: SPDX identifier matches file content
 - **DoD**: LICENSE file committed with correct content
 
-### LOR-0004: Create .gitignore for Go project
+### BIB-0004: Create .gitignore for Go project
 
 - **Purpose**: Prevent build artifacts and sensitive files from being committed
 - **Inputs**: Go project conventions
 - **Outputs**: `.gitignore`
 - **Files**: `.gitignore`
-- **Dependencies**: LOR-0001
+- **Dependencies**: BIB-0001
 - **Validation**: `git status` does not show build artifacts
 - **Security**: Excludes `.env`, credential files
 - **Compliance**: N/A
 - **DoD**: .gitignore committed
 
-### LOR-0005: Create minimal main.go entry point
+### BIB-0005: Create minimal main.go entry point
 
 - **Purpose**: Establish compilable entry point
 - **Inputs**: Architecture design
-- **Outputs**: `cmd/lore/main.go` (~20 lines)
-- **Files**: `cmd/lore/main.go`
-- **Dependencies**: LOR-0002
-- **Validation**: `go build ./cmd/lore/` produces binary
+- **Outputs**: `cmd/biblium/main.go` (~20 lines)
+- **Files**: `cmd/biblium/main.go`
+- **Dependencies**: BIB-0002
+- **Validation**: `go build ./cmd/biblium/` produces binary
 - **Security**: SPDX header present
 - **Compliance**: Copyright header, SPDX-License-Identifier
 - **DoD**: Binary compiles, runs (exits cleanly), headers correct
 
-### LOR-0006: Implement SafePath module with tests
+### BIB-0006: Implement SafePath module with tests
 
 - **Purpose**: Path traversal protection — security foundation
 - **Inputs**: Root directory path, user-provided relative path
 - **Outputs**: Validated absolute path or error
 - **Files**: `internal/safepath/safepath.go`, `internal/safepath/safepath_test.go`
-- **Dependencies**: LOR-0002
+- **Dependencies**: BIB-0002
 - **Validation**: Tests cover: normal paths, `../` traversal, symlinks, empty input, absolute input
 - **Security**: **Primary security control** — all file access MUST go through this
 - **Compliance**: SPDX headers
 - **DoD**: 100% test coverage on safepath, all traversal attacks blocked
 
-### LOR-0007: Implement config loader with tests
+### BIB-0007: Implement config loader with tests
 
 - **Purpose**: Load and validate configuration from environment variables
-- **Inputs**: Environment variables (`LORE_DATA_DIR`, `LORE_SEARCH_BACKEND`, etc.)
+- **Inputs**: Environment variables (`BIBLIUM_DATA_DIR`, `BIBLIUM_SEARCH_BACKEND`, etc.)
 - **Outputs**: Validated `Config` struct
 - **Files**: `internal/config/config.go`, `internal/config/config_test.go`
-- **Dependencies**: LOR-0002
+- **Dependencies**: BIB-0002
 - **Validation**: Tests cover: defaults, overrides, invalid values, missing required
 - **Security**: No secrets logged, validate data dir exists and is writable
 - **Compliance**: SPDX headers
 - **DoD**: Config loads from env, defaults work, invalid input rejected
 
-### LOR-0008: Implement structured logging with slog
+### BIB-0008: Implement structured logging with slog
 
 - **Purpose**: Audit trail and debugging
 - **Inputs**: Config (log level, log file path)
 - **Outputs**: Configured `slog.Logger`
 - **Files**: Integrated in `internal/config/config.go` (logger setup)
-- **Dependencies**: LOR-0007
+- **Dependencies**: BIB-0007
 - **Validation**: Test log output format, test log levels
 - **Security**: Structured logging prevents log injection
 - **Compliance**: SPDX headers
 - **DoD**: Logger produces structured JSON to stderr, optional file output
 
-### LOR-0009: Write Corpus data types and store interface
+### BIB-0009: Write Corpus data types and store interface
 
 - **Purpose**: Define the corpus data model (TDD: write tests first)
 - **Inputs**: Storage format design (Section 12)
 - **Outputs**: `Corpus` struct, `Store` interface
 - **Files**: `internal/corpus/corpus.go`, `internal/corpus/corpus_test.go`
-- **Dependencies**: LOR-0006, LOR-0007
+- **Dependencies**: BIB-0006, BIB-0007
 - **Validation**: Tests define expected behavior of List, Get, Create
 - **Security**: All paths go through SafePath
 - **Compliance**: SPDX headers
 - **DoD**: Tests written (RED), types compile
 
-### LOR-0010: Implement file-based corpus store
+### BIB-0010: Implement file-based corpus store
 
 - **Purpose**: Implement the Store interface with file-system backend
-- **Inputs**: LOR-0009 interface and tests
+- **Inputs**: BIB-0009 interface and tests
 - **Outputs**: Working file-based corpus CRUD
 - **Files**: `internal/corpus/corpus.go` (implement), `internal/corpus/corpus_test.go` (GREEN)
-- **Dependencies**: LOR-0009
-- **Validation**: All LOR-0009 tests pass (GREEN)
+- **Dependencies**: BIB-0009
+- **Validation**: All BIB-0009 tests pass (GREEN)
 - **Security**: SafePath used for all file operations, directory creation validated
 - **Compliance**: SPDX headers
 - **DoD**: All tests GREEN, corpus can be listed/created/read from filesystem
 
-### LOR-0011: Write BM25 search interface and test cases
+### BIB-0011: Write BM25 search interface and test cases
 
 - **Purpose**: Define search contract (TDD: tests first)
 - **Inputs**: Search requirements from functional scope
 - **Outputs**: `Searcher` interface, `Result` type, test expectations
 - **Files**: `internal/search/searcher.go`, `internal/search/bm25_test.go`
-- **Dependencies**: LOR-0009
+- **Dependencies**: BIB-0009
 - **Validation**: Tests define: index documents, query, rank results, score threshold
 - **Security**: Query input sanitized (max length, no control chars)
 - **Compliance**: SPDX headers
 - **DoD**: Tests written (RED), interfaces compile
 
-### LOR-0012: Implement BM25 ranking algorithm
+### BIB-0012: Implement BM25 ranking algorithm
 
 - **Purpose**: Pure Go BM25 search implementation
-- **Inputs**: LOR-0011 interface and tests
+- **Inputs**: BIB-0011 interface and tests
 - **Outputs**: Working BM25 search with TF-IDF scoring
 - **Files**: `internal/search/bm25.go`
-- **Dependencies**: LOR-0011
-- **Validation**: All LOR-0011 tests pass (GREEN)
+- **Dependencies**: BIB-0011
+- **Validation**: All BIB-0011 tests pass (GREEN)
 - **Security**: Input length limits enforced
 - **Compliance**: Algorithm is public domain (no IP concerns), SPDX headers
 - **DoD**: All search tests GREEN, ranking produces sensible results
 
-### LOR-0013: Implement BM25 index persistence
+### BIB-0013: Implement BM25 index persistence
 
 - **Purpose**: Save/load BM25 index to JSON file
 - **Inputs**: In-memory BM25 index
 - **Outputs**: `index.json` file per corpus
 - **Files**: `internal/search/bm25.go` (add Save/Load)
-- **Dependencies**: LOR-0012
+- **Dependencies**: BIB-0012
 - **Validation**: Tests: save index, reload, query returns same results
 - **Security**: Index file written to SafePath-validated location only
 - **Compliance**: SPDX headers
 - **DoD**: Index survives process restart, tests GREEN
 
-### LOR-0014: Implement document change detection
+### BIB-0014: Implement document change detection
 
 - **Purpose**: Only re-index changed documents (SHA256 hash comparison)
 - **Inputs**: Document files in corpus
 - **Outputs**: List of changed/new/deleted documents
 - **Files**: `internal/corpus/corpus.go` (add hash tracking)
-- **Dependencies**: LOR-0010
+- **Dependencies**: BIB-0010
 - **Validation**: Tests: add file → detected, modify → detected, unchanged → skipped
 - **Security**: Hash comparison prevents unnecessary processing
 - **Compliance**: SPDX headers
 - **DoD**: Tests GREEN, only changed docs trigger re-index
 
-### LOR-0015: Write MCP server skeleton with tests
+### BIB-0015: Write MCP server skeleton with tests
 
 - **Purpose**: MCP JSON-RPC over stdio (TDD: tests first)
 - **Inputs**: MCP protocol specification
 - **Outputs**: Server that handles `initialize`, `tools/list`, `tools/call`
 - **Files**: `internal/mcp/server.go`, `internal/mcp/server_test.go`
-- **Dependencies**: LOR-0005
+- **Dependencies**: BIB-0005
 - **Validation**: Tests: valid initialize handshake, tool listing, unknown method error
 - **Security**: Strict JSON-RPC validation, reject malformed requests
 - **Compliance**: SPDX headers
 - **DoD**: Tests written (RED), MCP types defined
 
-### LOR-0016: Implement MCP stdio transport
+### BIB-0016: Implement MCP stdio transport
 
 - **Purpose**: Read/write JSON-RPC messages on stdin/stdout
-- **Inputs**: LOR-0015 tests
+- **Inputs**: BIB-0015 tests
 - **Outputs**: Working stdio MCP transport
 - **Files**: `internal/mcp/server.go`
-- **Dependencies**: LOR-0015
-- **Validation**: All LOR-0015 tests pass (GREEN)
+- **Dependencies**: BIB-0015
+- **Validation**: All BIB-0015 tests pass (GREEN)
 - **Security**: Input size limits (max message 1MB), no unbounded reads
 - **Compliance**: SPDX headers
 - **DoD**: Tests GREEN, MCP handshake works via stdio
 
-### LOR-0017: Implement list_corpora tool
+### BIB-0017: Implement list_corpora tool
 
 - **Purpose**: MCP tool to list available corpora (replaces list_knowledge_bases)
 - **Inputs**: Corpus store
 - **Outputs**: JSON list of corpus names
 - **Files**: `internal/mcp/tools.go`, `internal/mcp/tools_test.go`
-- **Dependencies**: LOR-0010, LOR-0016
+- **Dependencies**: BIB-0010, BIB-0016
 - **Validation**: Test: create 3 corpora, call tool, verify 3 returned
 - **Security**: No user input in this tool (safe)
 - **Compliance**: SPDX headers, tool name differs from legacy
 - **DoD**: Test GREEN, tool callable via MCP protocol
 
-### LOR-0018: Implement search tool
+### BIB-0018: Implement search tool
 
 - **Purpose**: MCP tool for searching across corpora
 - **Inputs**: Query string, optional corpus name, optional threshold
 - **Outputs**: Ranked search results with scores
 - **Files**: `internal/mcp/tools.go`, `internal/mcp/tools_test.go`
-- **Dependencies**: LOR-0012, LOR-0016
+- **Dependencies**: BIB-0012, BIB-0016
 - **Validation**: Test: index docs, search, verify ranked results returned
 - **Security**: Query sanitized, corpus name validated via SafePath
 - **Compliance**: SPDX headers, tool name differs from legacy
 - **DoD**: Test GREEN, search returns ranked results via MCP
 
-### LOR-0019: Write URL ingestion module with tests
+### BIB-0019: Write URL ingestion module with tests
 
 - **Purpose**: Fetch URL, convert HTML to markdown, save to corpus (TDD)
 - **Inputs**: URL string, target corpus name
 - **Outputs**: Markdown file in corpus docs/ directory
 - **Files**: `internal/ingest/ingest.go`, `internal/ingest/ingest_test.go`
-- **Dependencies**: LOR-0010
+- **Dependencies**: BIB-0010
 - **Validation**: Tests with httptest server: fetch, convert, verify markdown output
 - **Security**: URL validation (scheme, no private IPs), timeout, size limit
 - **Compliance**: SPDX headers, html-to-markdown dependency license check
 - **DoD**: Tests GREEN, URL fetched and converted safely
 
-### LOR-0020: Implement URL approval workflow
+### BIB-0020: Implement URL approval workflow
 
 - **Purpose**: suggest → approve/reject pipeline for URL ingestion
 - **Inputs**: URL, corpus name, reason
 - **Outputs**: Pending entry in `pending.json`, approval triggers fetch+index
 - **Files**: `internal/ingest/ingest.go` (add approval), `internal/ingest/ingest_test.go`
-- **Dependencies**: LOR-0019
+- **Dependencies**: BIB-0019
 - **Validation**: Tests: suggest → list pending → approve → verify indexed; reject → verify removed
 - **Security**: Pending file written atomically, IDs are UUIDs
 - **Compliance**: SPDX headers
@@ -894,19 +894,19 @@ Each nano-task follows:
    **Resolved**: `mark3labs/mcp-go` v0.45.0
 
 2. **Text chunking strategy**: Fixed size (legacy: 1000 chars) or paragraph-based?
-   Decision needed during LOR-0012.
+   Decision needed during BIB-0012.
 
 3. **Concurrent access**: Single writer or need locking for index updates?
-   Decision needed during LOR-0013.
+   Decision needed during BIB-0013.
 
 4. **Container strategy**: Scratch image with static binary or distroless?
    Decision needed during P9.
 
 5. **Data directory topology**: Where do corpora live relative to projects?
    Three modes to evaluate:
-   - **Centralized**: Single global `LORE_DATA_DIR` shared by all projects (current default)
-   - **Decentralized**: Each project embeds its own KB (`./lore-data/`), versioned with git
-   - **Hybrid**: Global KB + per-project override via `.mcp.json` env `LORE_DATA_DIR`
+   - **Centralized**: Single global `BIBLIUM_DATA_DIR` shared by all projects (current default)
+   - **Decentralized**: Each project embeds its own KB (`./biblium-data/`), versioned with git
+   - **Hybrid**: Global KB + per-project override via `.mcp.json` env `BIBLIUM_DATA_DIR`
    Decision needed before P7 (migration). Impacts: multi-datadir support, index merging,
    cross-project search, `.gitignore` patterns.
 
@@ -916,8 +916,8 @@ Each nano-task follows:
 
 | Aspect | Legacy | Rewrite |
 |--------|--------|---------|
-| Project name | Knowledge Base MCP Server | Lore |
-| Binary name | `node build/index.js` | `lore` |
+| Project name | Knowledge Base MCP Server | Biblium |
+| Binary name | `node build/index.js` | `biblium` |
 | KB collections | knowledge_bases | corpora |
 | Tool: list | list_knowledge_bases | list_corpora |
 | Tool: search | retrieve_knowledge | search |
@@ -926,9 +926,9 @@ Each nano-task follows:
 | Tool: approve | approve_url | approve |
 | Tool: reject | reject_url | reject |
 | Tool: direct add | add_url | ingest |
-| Config root dir | KNOWLEDGE_BASES_ROOT_DIR | LORE_DATA_DIR |
+| Config root dir | KNOWLEDGE_BASES_ROOT_DIR | BIBLIUM_DATA_DIR |
 | Config index path | FAISS_INDEX_PATH | (auto, inside corpus) |
-| Config provider | EMBEDDING_PROVIDER | LORE_SEARCH_BACKEND |
+| Config provider | EMBEDDING_PROVIDER | BIBLIUM_SEARCH_BACKEND |
 
 Every name, every variable, every concept is renamed to eliminate any
 resemblance to the legacy codebase.

@@ -1,6 +1,6 @@
 # Binary (build output at repo root only)
-/lore
-/lore.exe
+/biblium
+/biblium.exe
 /build/
 /dist/
 

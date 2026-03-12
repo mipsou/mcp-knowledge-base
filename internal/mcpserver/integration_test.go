@@ -12,8 +12,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mipsou/lore-mcp/internal/corpus"
-	"github.com/mipsou/lore-mcp/internal/search"
+	"github.com/mipsou/mcp-biblium/internal/corpus"
+	"github.com/mipsou/mcp-biblium/internal/search"
 )
 
 // TestIntegrationFullWorkflow tests the complete workflow:

@@ -1,4 +1,4 @@
-module github.com/mipsou/lore-mcp
+module github.com/mipsou/mcp-biblium
 
 go 1.26.1
 

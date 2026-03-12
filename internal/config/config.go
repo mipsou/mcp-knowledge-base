@@ -31,11 +31,11 @@ var validBackends = map[string]bool{
 // Load reads configuration from environment variables with defaults.
 func Load() (*Config, error) {
 	cfg := &Config{
-		DataDir:       envOr("LORE_DATA_DIR", defaultDataDir()),
-		SearchBackend: envOr("LORE_SEARCH_BACKEND", "bm25"),
-		LogLevel:      envOr("LORE_LOG_LEVEL", "info"),
-		OllamaURL:     envOr("LORE_OLLAMA_URL", "http://localhost:11434"),
-		OllamaModel:   envOr("LORE_OLLAMA_MODEL", "all-minilm:l6-v2"),
+		DataDir:       envOr("BIBLIUM_DATA_DIR", defaultDataDir()),
+		SearchBackend: envOr("BIBLIUM_SEARCH_BACKEND", "bm25"),
+		LogLevel:      envOr("BIBLIUM_LOG_LEVEL", "info"),
+		OllamaURL:     envOr("BIBLIUM_OLLAMA_URL", "http://localhost:11434"),
+		OllamaModel:   envOr("BIBLIUM_OLLAMA_MODEL", "all-minilm:l6-v2"),
 	}
 
 	if !validBackends[cfg.SearchBackend] {
@@ -55,7 +55,7 @@ func envOr(key, fallback string) string {
 func defaultDataDir() string {
 	home, err := os.UserHomeDir()
 	if err != nil {
-		return "lore_data"
+		return "biblium_data"
 	}
-	return filepath.Join(home, "lore_data")
+	return filepath.Join(home, "biblium_data")
 }

@@ -14,16 +14,16 @@ import (
 
 	"github.com/mark3labs/mcp-go/server"
 
-	"github.com/mipsou/lore-mcp/internal/config"
-	"github.com/mipsou/lore-mcp/internal/corpus"
-	"github.com/mipsou/lore-mcp/internal/mcpserver"
-	"github.com/mipsou/lore-mcp/internal/search"
+	"github.com/mipsou/mcp-biblium/internal/config"
+	"github.com/mipsou/mcp-biblium/internal/corpus"
+	"github.com/mipsou/mcp-biblium/internal/mcpserver"
+	"github.com/mipsou/mcp-biblium/internal/search"
 )
 
 func main() {
 	cfg, err := config.Load()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "lore: config error: %v\n", err)
+		fmt.Fprintf(os.Stderr, "biblium: config error: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -31,10 +31,10 @@ func main() {
 	searcher := search.NewBM25()
 	srv := mcpserver.New(store, searcher)
 
-	fmt.Fprintf(os.Stderr, "lore: starting (data=%s, search=%s)\n", cfg.DataDir, cfg.SearchBackend)
+	fmt.Fprintf(os.Stderr, "biblium: starting (data=%s, search=%s)\n", cfg.DataDir, cfg.SearchBackend)
 
 	if err := server.ServeStdio(srv.MCPServer()); err != nil {
-		fmt.Fprintf(os.Stderr, "lore: server error: %v\n", err)
+		fmt.Fprintf(os.Stderr, "biblium: server error: %v\n", err)
 		os.Exit(1)
 	}
 }
