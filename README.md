@@ -1,62 +1,35 @@
-# Biblium
+# 📚 Biblium
 
-[English](#english) | [Fran\u00e7ais](#français)
+**Your AI's personal library.** A knowledge base server that gives Claude (or any MCP client) the ability to store, search, and retrieve documents — organized into collections you control.
+
+🇬🇧 [English](#-why-biblium) | 🇫🇷 [Français](#-pourquoi-biblium)
 
 ---
 
-## English
+## 🇬🇧 Why Biblium?
 
-MCP server for managing knowledge collections with full-text search.
+LLMs are powerful but stateless. Biblium gives them **persistent, searchable memory** through the [Model Context Protocol](https://modelcontextprotocol.io/).
 
-Pure Go, zero CGO, single binary. Uses SQLite (via modernc.org/sqlite) and BM25 ranking.
+Drop documentation, notes, or any text into named collections. Biblium indexes everything with BM25 ranking and makes it instantly searchable by your AI assistant.
 
-### Features
+### What makes it different
 
-- **Collections** \u2014 organize documents into named groups
-- **BM25 search** \u2014 full-text search across all collections
-- **URL ingestion** \u2014 suggest URLs, approve them, auto-fetch as markdown
-- **SQLite persistence** \u2014 pending URLs stored in WAL-mode SQLite
-- **MCP protocol** \u2014 stdio transport, works with Claude Desktop / Claude Code
+- **Single binary, zero dependencies** — Pure Go, no CGO, no Python, no Docker. Just copy and run.
+- **Works offline** — No cloud service, no API keys. Your data stays on your machine.
+- **URL ingestion with approval** — Suggest web pages to add; they're fetched and converted to markdown only after you approve.
+- **~17 MB binary, ~2600 lines of Go** — Small, auditable, maintainable.
 
-### MCP Tools
-
-| Tool | Description |
-|------|-------------|
-| `create_collection` | Create a new collection |
-| `list_collections` | List all collections |
-| `add_document` | Add a document to a collection |
-| `list_documents` | List documents in a collection |
-| `read_document` | Read a document |
-| `search` | Search across all collections |
-| `suggest_url` | Suggest a URL for ingestion (pending approval) |
-| `approve_url` | Approve a pending URL |
-| `list_pending` | List pending URL suggestions |
-
-### Build
+### Quick start
 
 ```bash
+# Build
 go build -o biblium ./cmd/biblium
+
+# Run (starts MCP stdio server)
+BIBLIUM_DATA_DIR=./my-knowledge biblium
 ```
 
-Cross-compile (no CGO required):
-
-```bash
-GOOS=linux GOARCH=amd64 go build -o biblium ./cmd/biblium
-```
-
-### Configuration
-
-Environment variables:
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `BIBLIUM_DATA_DIR` | `~/biblium_data` | Data storage directory |
-| `BIBLIUM_SEARCH_BACKEND` | `bm25` | Search backend (`bm25` or `ollama`) |
-| `BIBLIUM_LOG_LEVEL` | `info` | Log level |
-
-### Usage with Claude Desktop
-
-Add to `claude_desktop_config.json`:
+Add to **Claude Desktop** (`claude_desktop_config.json`):
 
 ```json
 {
@@ -71,65 +44,100 @@ Add to `claude_desktop_config.json`:
 }
 ```
 
-### License
+Multiple instances with separate data directories:
 
-EUPL-1.2-or-later \u2014 [Full text](https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12)
-
----
-
-## Fran\u00e7ais
-
-Serveur MCP pour g\u00e9rer des collections de connaissances avec recherche plein texte.
-
-Go pur, z\u00e9ro CGO, binaire unique. Utilise SQLite (via modernc.org/sqlite) et classement BM25.
-
-### Fonctionnalit\u00e9s
-
-- **Collections** \u2014 organiser les documents en groupes nomm\u00e9s
-- **Recherche BM25** \u2014 recherche plein texte sur toutes les collections
-- **Ingestion d'URL** \u2014 proposer des URLs, les approuver, r\u00e9cup\u00e9ration auto en markdown
-- **Persistance SQLite** \u2014 URLs en attente stock\u00e9es en SQLite mode WAL
-- **Protocole MCP** \u2014 transport stdio, compatible Claude Desktop / Claude Code
-
-### Outils MCP
-
-| Outil | Description |
-|-------|-------------|
-| `create_collection` | Cr\u00e9er une nouvelle collection |
-| `list_collections` | Lister toutes les collections |
-| `add_document` | Ajouter un document \u00e0 une collection |
-| `list_documents` | Lister les documents d'une collection |
-| `read_document` | Lire un document |
-| `search` | Rechercher dans toutes les collections |
-| `suggest_url` | Proposer une URL \u00e0 ing\u00e9rer (approbation requise) |
-| `approve_url` | Approuver une URL en attente |
-| `list_pending` | Lister les URLs en attente |
-
-### Compilation
-
-```bash
-go build -o biblium ./cmd/biblium
+```json
+{
+  "mcpServers": {
+    "biblium-infra": {
+      "command": "/path/to/biblium",
+      "env": { "BIBLIUM_DATA_DIR": "/data/infra-docs" }
+    },
+    "biblium-dev": {
+      "command": "/path/to/biblium",
+      "env": { "BIBLIUM_DATA_DIR": "/data/dev-docs" }
+    }
+  }
+}
 ```
 
-Cross-compilation (aucun CGO requis) :
+Then ask Claude: *"Create a collection called 'golang' and add my notes about error handling."*
 
-```bash
-GOOS=linux GOARCH=amd64 go build -o biblium ./cmd/biblium
+### MCP Tools
+
+| Tool | What it does |
+|------|-------------|
+| `create_collection` | Create a new knowledge collection |
+| `list_collections` | List all collections |
+| `add_document` | Add a document to a collection |
+| `list_documents` | List documents in a collection |
+| `read_document` | Read a document's content |
+| `search` | Full-text search across all collections (BM25) |
+| `suggest_url` | Suggest a URL for ingestion (requires approval) |
+| `approve_url` | Approve and fetch a pending URL as markdown |
+| `list_pending` | List all pending URL suggestions |
+
+### How it works
+
+```mermaid
+graph TD
+    A[Claude / MCP Client] -->|stdio JSON-RPC| B[Biblium]
+    B --> C[FileStore<br/>docs/]
+    B --> D[SQLite<br/>pending URLs]
+    C --> E[BM25 Index<br/>in-memory]
 ```
+
+Collections live as directories on disk. Documents are plain text files. The BM25 index rebuilds from disk on startup — no separate database for search.
 
 ### Configuration
 
-Variables d'environnement :
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `BIBLIUM_DATA_DIR` | `~/biblium_data` | Where collections are stored |
+| `BIBLIUM_SEARCH_BACKEND` | `bm25` | Search engine (`bm25` or `ollama`) |
+| `BIBLIUM_LOG_LEVEL` | `info` | Log verbosity |
 
-| Variable | D\u00e9faut | Description |
-|----------|--------|-------------|
-| `BIBLIUM_DATA_DIR` | `~/biblium_data` | R\u00e9pertoire de stockage |
-| `BIBLIUM_SEARCH_BACKEND` | `bm25` | Moteur de recherche (`bm25` ou `ollama`) |
-| `BIBLIUM_LOG_LEVEL` | `info` | Niveau de log |
+### Cross-compilation
 
-### Utilisation avec Claude Desktop
+No CGO means easy cross-compilation for any platform:
 
-Ajouter dans `claude_desktop_config.json` :
+```bash
+GOOS=linux   GOARCH=amd64 go build -o biblium ./cmd/biblium
+GOOS=linux   GOARCH=arm64 go build -o biblium ./cmd/biblium
+GOOS=darwin  GOARCH=arm64 go build -o biblium ./cmd/biblium
+GOOS=netbsd  GOARCH=amd64 go build -o biblium ./cmd/biblium
+```
+
+### License
+
+[EUPL-1.2-or-later](https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12) — Free and open source, compatible with GPL, AGPL, MPL.
+
+---
+
+## 🇫🇷 Pourquoi Biblium ?
+
+Les LLMs sont puissants mais sans mémoire. Biblium leur donne une **mémoire persistante et cherchable** via le [Model Context Protocol](https://modelcontextprotocol.io/).
+
+Déposez de la documentation, des notes ou du texte dans des collections nommées. Biblium indexe tout avec un classement BM25 et rend le contenu instantanément accessible à votre assistant IA.
+
+### Ce qui le distingue
+
+- **Un seul binaire, zéro dépendance** — Go pur, pas de CGO, pas de Python, pas de Docker. Copier et lancer.
+- **Fonctionne hors ligne** — Aucun service cloud, aucune clé API. Vos données restent sur votre machine.
+- **Ingestion d'URL avec approbation** — Proposez des pages web ; elles sont récupérées en markdown uniquement après validation.
+- **~17 Mo, ~2600 lignes de Go** — Petit, auditable, maintenable.
+
+### Démarrage rapide
+
+```bash
+# Compiler
+go build -o biblium ./cmd/biblium
+
+# Lancer (serveur MCP stdio)
+BIBLIUM_DATA_DIR=./mes-connaissances biblium
+```
+
+Ajouter dans **Claude Desktop** (`claude_desktop_config.json`) :
 
 ```json
 {
@@ -144,6 +152,70 @@ Ajouter dans `claude_desktop_config.json` :
 }
 ```
 
+Plusieurs instances avec des répertoires séparés :
+
+```json
+{
+  "mcpServers": {
+    "biblium-infra": {
+      "command": "/chemin/vers/biblium",
+      "env": { "BIBLIUM_DATA_DIR": "/data/docs-infra" }
+    },
+    "biblium-dev": {
+      "command": "/chemin/vers/biblium",
+      "env": { "BIBLIUM_DATA_DIR": "/data/docs-dev" }
+    }
+  }
+}
+```
+
+Puis demandez à Claude : *« Crée une collection 'golang' et ajoute mes notes sur la gestion d'erreurs. »*
+
+### Outils MCP
+
+| Outil | Fonction |
+|-------|----------|
+| `create_collection` | Créer une nouvelle collection |
+| `list_collections` | Lister toutes les collections |
+| `add_document` | Ajouter un document à une collection |
+| `list_documents` | Lister les documents d'une collection |
+| `read_document` | Lire le contenu d'un document |
+| `search` | Recherche plein texte sur toutes les collections (BM25) |
+| `suggest_url` | Proposer une URL à ingérer (approbation requise) |
+| `approve_url` | Approuver et récupérer une URL en markdown |
+| `list_pending` | Lister les URLs en attente |
+
+### Architecture
+
+```mermaid
+graph TD
+    A[Claude / Client MCP] -->|stdio JSON-RPC| B[Biblium]
+    B --> C[FileStore<br/>docs/]
+    B --> D[SQLite<br/>URLs en attente]
+    C --> E[Index BM25<br/>en mémoire]
+```
+
+Les collections sont des répertoires sur disque. Les documents sont des fichiers texte. L'index BM25 se reconstruit au démarrage — pas de base séparée pour la recherche.
+
+### Configuration
+
+| Variable | Défaut | Description |
+|----------|--------|-------------|
+| `BIBLIUM_DATA_DIR` | `~/biblium_data` | Répertoire de stockage |
+| `BIBLIUM_SEARCH_BACKEND` | `bm25` | Moteur de recherche (`bm25` ou `ollama`) |
+| `BIBLIUM_LOG_LEVEL` | `info` | Niveau de log |
+
+### Cross-compilation
+
+Aucun CGO — compilation croisée pour toute plateforme :
+
+```bash
+GOOS=linux   GOARCH=amd64 go build -o biblium ./cmd/biblium
+GOOS=linux   GOARCH=arm64 go build -o biblium ./cmd/biblium
+GOOS=darwin  GOARCH=arm64 go build -o biblium ./cmd/biblium
+GOOS=netbsd  GOARCH=amd64 go build -o biblium ./cmd/biblium
+```
+
 ### Licence
 
-EUPL-1.2-ou-ult\u00e9rieure \u2014 [Texte int\u00e9gral](https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12)
+[EUPL-1.2-ou-ultérieure](https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12) — Libre et open source, compatible GPL, AGPL, MPL.
