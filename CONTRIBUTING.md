@@ -32,6 +32,11 @@ Open an [issue](https://github.com/mipsou/mcp-biblium/issues) with:
 - Expected vs actual behavior
 - OS and Go version
 
+## Contact
+
+- Discord: `mipsou`
+- Twitch: [mipsou](https://www.twitch.tv/mipsou)
+
 ## Security
 
 For security vulnerabilities, use [GitHub Security Advisories](https://github.com/mipsou/mcp-biblium/security/advisories/new) instead of public issues. See [SECURITY.md](SECURITY.md).
