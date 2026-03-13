@@ -37,8 +37,8 @@ func TestAddReturnsEntry(t *testing.T) {
 
 func TestListReturnsPendingEntries(t *testing.T) {
 	q := NewQueue()
-	q.Add("infra", "https://example.com/a")
-	q.Add("infra", "https://example.com/b")
+	_, _ = q.Add("infra", "https://example.com/a")
+	_, _ = q.Add("infra", "https://example.com/b")
 
 	entries := q.List()
 	if len(entries) != 2 {

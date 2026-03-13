@@ -20,7 +20,7 @@ import (
 func (s *Server) handleCreateCollection(_ context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	name, err := req.RequireString("name")
 	if err != nil {
-		return mcp.NewToolResultError(fmt.Sprintf("missing required parameter: name")), nil
+		return mcp.NewToolResultError("missing required parameter: name"), nil
 	}
 
 	if err := s.store.Create(name); err != nil {

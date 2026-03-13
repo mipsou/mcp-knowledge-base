@@ -49,8 +49,8 @@ func TestPendingAdd(t *testing.T) {
 func TestPendingList(t *testing.T) {
 	db := openTestDB(t)
 
-	db.PendingAdd("infra", "https://example.com/a")
-	db.PendingAdd("infra", "https://example.com/b")
+	_, _ = db.PendingAdd("infra", "https://example.com/a")
+	_, _ = db.PendingAdd("infra", "https://example.com/b")
 
 	entries, err := db.PendingList()
 	if err != nil {
@@ -110,7 +110,7 @@ func TestPendingSurvivesReopen(t *testing.T) {
 	path := filepath.Join(dir, "test.db")
 
 	db1, _ := Open(path)
-	db1.PendingAdd("infra", "https://example.com/persist")
+	_, _ = db1.PendingAdd("infra", "https://example.com/persist")
 	db1.Close()
 
 	db2, _ := Open(path)
