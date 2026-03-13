@@ -33,7 +33,7 @@ Drop documentation, notes, or any text into named collections. Biblium indexes e
 
 ### What makes it different
 
-- **Single binary, 3 direct deps** — Pure Go, no CGO, no Python, no Docker. Just copy and run. [See go.mod](https://github.com/mipsou/mcp-biblium/blob/main/go.mod).
+- **Single binary, 3 direct deps** — No CGO, no Python, no Docker. SQLite via [modernc.org/sqlite](https://pkg.go.dev/modernc.org/sqlite) (C transpiled to Go). Just copy and run. [See go.mod](https://github.com/mipsou/mcp-biblium/blob/main/go.mod).
 - **Works offline** — No cloud service, no API keys. Your data stays on your machine.
 - **URL ingestion with approval** — Suggest web pages to add; they're fetched and converted to markdown only after you approve.
 - **~17 MB binary, ~2600 lines of Go** — Small, auditable, maintainable.
@@ -41,7 +41,10 @@ Drop documentation, notes, or any text into named collections. Biblium indexes e
 ### Quick start
 
 ```bash
-# Build
+# Install directly
+go install github.com/mipsou/mcp-biblium/cmd/biblium@latest
+
+# Or build from source
 go build -o biblium ./cmd/biblium
 
 # Run (starts MCP stdio server)
@@ -124,8 +127,12 @@ No CGO means easy cross-compilation for any platform:
 GOOS=linux   GOARCH=amd64 go build -o biblium ./cmd/biblium
 GOOS=linux   GOARCH=arm64 go build -o biblium ./cmd/biblium
 GOOS=darwin  GOARCH=arm64 go build -o biblium ./cmd/biblium
+GOOS=windows GOARCH=amd64 go build -o biblium.exe ./cmd/biblium
 GOOS=freebsd GOARCH=amd64 go build -o biblium ./cmd/biblium
+GOOS=openbsd GOARCH=amd64 go build -o biblium ./cmd/biblium
 ```
+
+> **Note:** NetBSD amd64 builds fail due to an upstream bug in [modernc.org/sqlite](https://github.com/mipsou/mcp-biblium/issues/23).
 
 ### License
 
@@ -141,7 +148,7 @@ Déposez de la documentation, des notes ou du texte dans des collections nommée
 
 ### Ce qui le distingue
 
-- **Un seul binaire, 3 deps directes** — Go pur, pas de CGO, pas de Python, pas de Docker. Copier et lancer. [Voir go.mod](https://github.com/mipsou/mcp-biblium/blob/main/go.mod).
+- **Un seul binaire, 3 deps directes** — Pas de CGO, pas de Python, pas de Docker. SQLite via [modernc.org/sqlite](https://pkg.go.dev/modernc.org/sqlite) (C transpilé en Go). Copier et lancer. [Voir go.mod](https://github.com/mipsou/mcp-biblium/blob/main/go.mod).
 - **Fonctionne hors ligne** — Aucun service cloud, aucune clé API. Vos données restent sur votre machine.
 - **Ingestion d'URL avec approbation** — Proposez des pages web ; elles sont récupérées en markdown uniquement après validation.
 - **~17 Mo, ~2600 lignes de Go** — Petit, auditable, maintenable.
@@ -149,7 +156,10 @@ Déposez de la documentation, des notes ou du texte dans des collections nommée
 ### Démarrage rapide
 
 ```bash
-# Compiler
+# Installer directement
+go install github.com/mipsou/mcp-biblium/cmd/biblium@latest
+
+# Ou compiler depuis les sources
 go build -o biblium ./cmd/biblium
 
 # Lancer (serveur MCP stdio)
@@ -232,8 +242,12 @@ Aucun CGO — compilation croisée pour toute plateforme :
 GOOS=linux   GOARCH=amd64 go build -o biblium ./cmd/biblium
 GOOS=linux   GOARCH=arm64 go build -o biblium ./cmd/biblium
 GOOS=darwin  GOARCH=arm64 go build -o biblium ./cmd/biblium
+GOOS=windows GOARCH=amd64 go build -o biblium.exe ./cmd/biblium
 GOOS=freebsd GOARCH=amd64 go build -o biblium ./cmd/biblium
+GOOS=openbsd GOARCH=amd64 go build -o biblium ./cmd/biblium
 ```
+
+> **Note :** NetBSD amd64 ne compile pas, bug upstream dans [modernc.org/sqlite](https://github.com/mipsou/mcp-biblium/issues/23).
 
 ### Licence
 
