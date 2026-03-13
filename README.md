@@ -9,6 +9,12 @@
 [![Issues](https://img.shields.io/github/issues/mipsou/mcp-biblium?style=flat-square)](https://github.com/mipsou/mcp-biblium/issues)
 [![Repo Size](https://img.shields.io/github/repo-size/mipsou/mcp-biblium?style=flat-square)](https://github.com/mipsou/mcp-biblium)
 
+[![Linux](https://img.shields.io/badge/Linux-amd64%20|%20arm64-yellow?style=flat-square&logo=linux&logoColor=white)](https://github.com/mipsou/mcp-biblium)
+[![macOS](https://img.shields.io/badge/macOS-arm64-yellow?style=flat-square&logo=apple&logoColor=white)](https://github.com/mipsou/mcp-biblium)
+[![Windows](https://img.shields.io/badge/Windows-amd64-yellow?style=flat-square&logo=windows&logoColor=white)](https://github.com/mipsou/mcp-biblium)
+[![FreeBSD](https://img.shields.io/badge/FreeBSD-amd64-yellow?style=flat-square&logo=freebsd&logoColor=white)](https://github.com/mipsou/mcp-biblium)
+[![OpenBSD](https://img.shields.io/badge/OpenBSD-amd64-yellow?style=flat-square&logo=openbsd&logoColor=white)](https://github.com/mipsou/mcp-biblium)
+
 **Your AI's personal library.** A knowledge base server that gives Claude (or any MCP client) the ability to store, search, and retrieve documents — organized into collections you control.
 
 🇬🇧 [English](#-why-biblium) | 🇫🇷 [Français](#-pourquoi-biblium)
