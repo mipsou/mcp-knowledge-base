@@ -8,6 +8,7 @@
 [![Last Commit](https://img.shields.io/github/last-commit/mipsou/mcp-biblium?style=flat-square)](https://github.com/mipsou/mcp-biblium/commits/main)
 [![Issues](https://img.shields.io/github/issues/mipsou/mcp-biblium?style=flat-square)](https://github.com/mipsou/mcp-biblium/issues)
 [![Repo Size](https://img.shields.io/github/repo-size/mipsou/mcp-biblium?style=flat-square)](https://github.com/mipsou/mcp-biblium)
+[![Dependencies](https://img.shields.io/badge/deps-3%20direct-green?style=flat-square)](https://github.com/mipsou/mcp-biblium/blob/main/go.mod)
 [![English](https://img.shields.io/badge/%F0%9F%87%BA%F0%9F%87%B8-English-blue?style=flat-square)](#-why-biblium)
 [![Français](https://img.shields.io/badge/%F0%9F%87%AB%F0%9F%87%B7-Fran%C3%A7ais-blue?style=flat-square)](#-pourquoi-biblium-)
 
@@ -32,7 +33,7 @@ Drop documentation, notes, or any text into named collections. Biblium indexes e
 
 ### What makes it different
 
-- **Single binary, zero dependencies** — Pure Go, no CGO, no Python, no Docker. Just copy and run.
+- **Single binary, 3 direct deps** — Pure Go, no CGO, no Python, no Docker. Just copy and run. [See go.mod](https://github.com/mipsou/mcp-biblium/blob/main/go.mod).
 - **Works offline** — No cloud service, no API keys. Your data stays on your machine.
 - **URL ingestion with approval** — Suggest web pages to add; they're fetched and converted to markdown only after you approve.
 - **~17 MB binary, ~2600 lines of Go** — Small, auditable, maintainable.
@@ -140,7 +141,7 @@ Déposez de la documentation, des notes ou du texte dans des collections nommée
 
 ### Ce qui le distingue
 
-- **Un seul binaire, zéro dépendance** — Go pur, pas de CGO, pas de Python, pas de Docker. Copier et lancer.
+- **Un seul binaire, 3 deps directes** — Go pur, pas de CGO, pas de Python, pas de Docker. Copier et lancer. [Voir go.mod](https://github.com/mipsou/mcp-biblium/blob/main/go.mod).
 - **Fonctionne hors ligne** — Aucun service cloud, aucune clé API. Vos données restent sur votre machine.
 - **Ingestion d'URL avec approbation** — Proposez des pages web ; elles sont récupérées en markdown uniquement après validation.
 - **~17 Mo, ~2600 lignes de Go** — Petit, auditable, maintenable.
