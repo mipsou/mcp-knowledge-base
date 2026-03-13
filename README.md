@@ -237,4 +237,4 @@ GOOS=freebsd GOARCH=amd64 go build -o biblium ./cmd/biblium
 
 ### Licence
 
-[EUPL-1.2-ou-ultérieure](https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12) — Libre et open source, compatible GPL, AGPL, MPL.
+[EUPL-1.2-ou-ultérieure](https://interoperable-europe.ec.europa.eu/sites/default/files/inline-files/EUPL%20v1_2%20FR.txt) — Libre et open source, compatible GPL, AGPL, MPL.
