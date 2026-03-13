@@ -8,7 +8,8 @@
 [![Last Commit](https://img.shields.io/github/last-commit/mipsou/mcp-biblium?style=flat-square)](https://github.com/mipsou/mcp-biblium/commits/main)
 [![Issues](https://img.shields.io/github/issues/mipsou/mcp-biblium?style=flat-square)](https://github.com/mipsou/mcp-biblium/issues)
 [![Repo Size](https://img.shields.io/github/repo-size/mipsou/mcp-biblium?style=flat-square)](https://github.com/mipsou/mcp-biblium)
-[![Made in France](https://img.shields.io/badge/Made%20in-France-blue?style=flat-square&labelColor=002395&color=ED2939)](https://github.com/mipsou/mcp-biblium)
+[![English](https://img.shields.io/badge/%F0%9F%87%BA%F0%9F%87%B8-English-blue?style=flat-square)](#-why-biblium)
+[![Français](https://img.shields.io/badge/%F0%9F%87%AB%F0%9F%87%B7-Fran%C3%A7ais-blue?style=flat-square)](#-pourquoi-biblium-)
 
 [![Linux](https://img.shields.io/badge/Linux-amd64%20|%20arm64-yellow?style=flat-square&logo=linux&logoColor=white)](https://github.com/mipsou/mcp-biblium)
 [![macOS](https://img.shields.io/badge/macOS-arm64-yellow?style=flat-square&logo=apple&logoColor=white)](https://github.com/mipsou/mcp-biblium)
