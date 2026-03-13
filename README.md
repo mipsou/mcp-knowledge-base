@@ -1,5 +1,14 @@
 # 📚 Biblium
 
+[![GitHub Stars](https://img.shields.io/github/stars/mipsou/mcp-biblium?style=flat-square)](https://github.com/mipsou/mcp-biblium/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/mipsou/mcp-biblium?style=flat-square)](https://github.com/mipsou/mcp-biblium/network)
+[![License](https://img.shields.io/badge/license-EUPL--1.2-blue?style=flat-square)](https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12)
+[![CI](https://img.shields.io/github/actions/workflow/status/mipsou/mcp-biblium/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/mipsou/mcp-biblium/actions)
+[![Go Version](https://img.shields.io/github/go-mod/go-version/mipsou/mcp-biblium?style=flat-square)](https://go.dev/)
+[![Last Commit](https://img.shields.io/github/last-commit/mipsou/mcp-biblium?style=flat-square)](https://github.com/mipsou/mcp-biblium/commits/main)
+[![Issues](https://img.shields.io/github/issues/mipsou/mcp-biblium?style=flat-square)](https://github.com/mipsou/mcp-biblium/issues)
+[![Repo Size](https://img.shields.io/github/repo-size/mipsou/mcp-biblium?style=flat-square)](https://github.com/mipsou/mcp-biblium)
+
 **Your AI's personal library.** A knowledge base server that gives Claude (or any MCP client) the ability to store, search, and retrieve documents — organized into collections you control.
 
 🇬🇧 [English](#-why-biblium) | 🇫🇷 [Français](#-pourquoi-biblium)
@@ -105,7 +114,7 @@ No CGO means easy cross-compilation for any platform:
 GOOS=linux   GOARCH=amd64 go build -o biblium ./cmd/biblium
 GOOS=linux   GOARCH=arm64 go build -o biblium ./cmd/biblium
 GOOS=darwin  GOARCH=arm64 go build -o biblium ./cmd/biblium
-GOOS=netbsd  GOARCH=amd64 go build -o biblium ./cmd/biblium
+GOOS=freebsd GOARCH=amd64 go build -o biblium ./cmd/biblium
 ```
 
 ### License
@@ -213,7 +222,7 @@ Aucun CGO — compilation croisée pour toute plateforme :
 GOOS=linux   GOARCH=amd64 go build -o biblium ./cmd/biblium
 GOOS=linux   GOARCH=arm64 go build -o biblium ./cmd/biblium
 GOOS=darwin  GOARCH=arm64 go build -o biblium ./cmd/biblium
-GOOS=netbsd  GOARCH=amd64 go build -o biblium ./cmd/biblium
+GOOS=freebsd GOARCH=amd64 go build -o biblium ./cmd/biblium
 ```
 
 ### Licence
