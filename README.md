@@ -14,6 +14,7 @@
 [![Windows](https://img.shields.io/badge/Windows-amd64-yellow?style=flat-square&logo=windows&logoColor=white)](https://github.com/mipsou/mcp-biblium)
 [![FreeBSD](https://img.shields.io/badge/FreeBSD-amd64-yellow?style=flat-square&logo=freebsd&logoColor=white)](https://github.com/mipsou/mcp-biblium)
 [![OpenBSD](https://img.shields.io/badge/OpenBSD-amd64-yellow?style=flat-square&logo=openbsd&logoColor=white)](https://github.com/mipsou/mcp-biblium)
+[![NetBSD](https://img.shields.io/badge/NetBSD-amd64-red?style=flat-square&logo=netbsd&logoColor=white)](https://gitlab.com/cznic/sqlite/-/issues)
 
 **Your AI's personal library.** A knowledge base server that gives Claude (or any MCP client) the ability to store, search, and retrieve documents — organized into collections you control.
 
