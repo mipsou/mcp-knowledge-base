@@ -34,7 +34,7 @@ Open an [issue](https://github.com/mipsou/mcp-biblium/issues) with:
 
 ## Contact
 
-- Discord: `mipsou`
+- Discord: [mipsou](https://discord.gg/QfXnfHW)
 - Twitch: [mipsou](https://www.twitch.tv/mipsou)
 
 ## Security
