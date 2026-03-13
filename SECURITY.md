@@ -10,13 +10,13 @@
 
 **Please do not open a public issue for security vulnerabilities.**
 
-Instead, send an email to **chpujol@gmail.com** with:
+Use [GitHub Security Advisories](https://github.com/mipsou/mcp-biblium/security/advisories/new) to report privately. Include:
 
 - Description of the vulnerability
 - Steps to reproduce
 - Impact assessment (if possible)
 
-You should receive a response within 72 hours. Once confirmed, a fix will be prioritized and released as a patch version.
+Reports will be triaged within 72 hours. Once confirmed, a fix will be prioritized and released as a patch version.
 
 ## Scope
 
