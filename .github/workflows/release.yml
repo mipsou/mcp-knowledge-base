@@ -20,6 +20,10 @@ jobs:
             goarch: amd64
           - goos: linux
             goarch: arm64
+          - goos: freebsd
+            goarch: amd64
+          - goos: openbsd
+            goarch: amd64
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,12 +32,30 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
+
+      - name: Set version
+        run: |
+          VERSION=$(git describe --tags --always --dirty 2>/dev/null || echo dev)
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "LDFLAGS=-ldflags \"-s -w -X main.version=$VERSION\"" >> "$GITHUB_ENV"
+
+      - name: Build standalone binary
+        run: |
+          EXT=""
+          if [ "${{ matrix.goos }}" = "windows" ]; then EXT=".exe"; fi
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} \
+            go build -ldflags "-s -w -X main.version=$VERSION" \
+            -o dist/biblium-${{ matrix.goos }}-${{ matrix.goarch }}${EXT} \
+            ./cmd/biblium
+
       - name: Build MCPB bundle
+        if: matrix.goos != 'freebsd' && matrix.goos != 'openbsd'
         run: make mcpb GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }}
+
       - uses: actions/upload-artifact@v4
         with:
-          name: mcpb-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: dist/*.mcpb
+          name: release-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: dist/*
 
   release:
     needs: build
@@ -51,4 +73,4 @@ jobs:
           gh release create "${{ github.ref_name }}" \
             --title "Biblium ${{ github.ref_name }}" \
             --generate-notes \
-            dist/*.mcpb
+            dist/*
