@@ -2,7 +2,7 @@
 
 [![GitHub Stars](https://img.shields.io/github/stars/mipsou/mcp-biblium?style=flat-square)](https://github.com/mipsou/mcp-biblium/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/mipsou/mcp-biblium?style=flat-square)](https://github.com/mipsou/mcp-biblium/network)
-[![License](https://img.shields.io/badge/license-EUPL--1.2-blue?style=flat-square)](https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12)
+[![License](https://img.shields.io/badge/license-EUPL--1.2_OR_BSD--2-blue?style=flat-square)](https://github.com/mipsou/mcp-biblium/blob/main/LICENSE)
 [![CI](https://img.shields.io/github/actions/workflow/status/mipsou/mcp-biblium/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/mipsou/mcp-biblium/actions)
 [![Go Version](https://img.shields.io/github/go-mod/go-version/mipsou/mcp-biblium?style=flat-square)](https://go.dev/)
 [![Last Commit](https://img.shields.io/github/last-commit/mipsou/mcp-biblium?style=flat-square)](https://github.com/mipsou/mcp-biblium/commits/main)
@@ -138,9 +138,7 @@ GOOS=openbsd GOARCH=amd64 go build -o biblium ./cmd/biblium
 
 ### License
 
-[EUPL-1.2-or-later](https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12) — A **copyleft** license (similar in spirit to LGPL/MPL).
-
-EUPL's [Article 5](https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12#article-5) allows downstream redistribution under: GPL-2.0+, AGPL-3.0, LGPL-2.1+, MPL-2.0, EPL-1.0/2.0, CeCILL-2.0/2.1. See the [compatibility list](https://joinup.ec.europa.eu/collection/eupl/matrix-eupl-compatible-open-source-licences).
+Dual-licensed: [EUPL-1.2](LICENSE) OR [BSD-2-Clause](LICENSE-BSD) — your choice.
 
 ---
 
@@ -257,6 +255,4 @@ GOOS=openbsd GOARCH=amd64 go build -o biblium ./cmd/biblium
 
 ### Licence
 
-[EUPL-1.2-ou-ultérieure](https://interoperable-europe.ec.europa.eu/sites/default/files/inline-files/EUPL%20v1_2%20FR.txt) — Licence **copyleft** (similaire en esprit à LGPL/MPL).
-
-L'[Article 5](https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12#article-5) de l'EUPL permet la redistribution sous : GPL-2.0+, AGPL-3.0, LGPL-2.1+, MPL-2.0, EPL-1.0/2.0, CeCILL-2.0/2.1. Voir la [matrice de compatibilité](https://joinup.ec.europa.eu/collection/eupl/matrix-eupl-compatible-open-source-licences).
+Double licence : [EUPL-1.2](LICENSE) OU [BSD-2-Clause](LICENSE-BSD) — au choix.
