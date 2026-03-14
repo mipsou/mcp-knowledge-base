@@ -30,7 +30,7 @@ func newTestServer(t *testing.T) *Server {
 		t.Fatalf("storage.Open: %v", err)
 	}
 	t.Cleanup(func() { db.Close() })
-	return New(store, searcher, db)
+	return New(store, searcher, db, "test")
 }
 
 func TestNewServerNotNil(t *testing.T) {
